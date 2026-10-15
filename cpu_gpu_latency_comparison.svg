@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="650" viewBox="0 0 1050 650">
+<rect width="100%" height="100%" fill="#fff"/>
+<style>text { font-family: Arial, sans-serif; fill: #172033; } .grid { stroke: #d9dee7; stroke-width: 1; stroke-dasharray: 5 4; } .axis { stroke: #293241; stroke-width: 1.5; }</style>
+<text x="525.0" y="42" text-anchor="middle" font-size="26" font-weight="700">SHIELD: CPU vs. GPU FHE Latency</text>
+<text x="525.0" y="70" text-anchor="middle" font-size="14" fill="#536174">CPU value estimated from attached chart · GPU from 1,000 measured samples</text>
+<line x1="125.00" y1="100" x2="125.00" y2="495" class="grid"/>
+<line x1="125.00" y1="495" x2="125.00" y2="501" class="axis"/>
+<text x="125.00" y="523" text-anchor="middle" font-size="13">4.3</text>
+<line x1="203.64" y1="100" x2="203.64" y2="495" class="grid"/>
+<line x1="203.64" y1="495" x2="203.64" y2="501" class="axis"/>
+<text x="203.64" y="523" text-anchor="middle" font-size="13">4.5</text>
+<line x1="282.27" y1="100" x2="282.27" y2="495" class="grid"/>
+<line x1="282.27" y1="495" x2="282.27" y2="501" class="axis"/>
+<text x="282.27" y="523" text-anchor="middle" font-size="13">4.7</text>
+<line x1="360.91" y1="100" x2="360.91" y2="495" class="grid"/>
+<line x1="360.91" y1="495" x2="360.91" y2="501" class="axis"/>
+<text x="360.91" y="523" text-anchor="middle" font-size="13">4.9</text>
+<line x1="439.55" y1="100" x2="439.55" y2="495" class="grid"/>
+<line x1="439.55" y1="495" x2="439.55" y2="501" class="axis"/>
+<text x="439.55" y="523" text-anchor="middle" font-size="13">5.1</text>
+<line x1="518.18" y1="100" x2="518.18" y2="495" class="grid"/>
+<line x1="518.18" y1="495" x2="518.18" y2="501" class="axis"/>
+<text x="518.18" y="523" text-anchor="middle" font-size="13">5.3</text>
+<line x1="596.82" y1="100" x2="596.82" y2="495" class="grid"/>
+<line x1="596.82" y1="495" x2="596.82" y2="501" class="axis"/>
+<text x="596.82" y="523" text-anchor="middle" font-size="13">5.5</text>
+<line x1="675.45" y1="100" x2="675.45" y2="495" class="grid"/>
+<line x1="675.45" y1="495" x2="675.45" y2="501" class="axis"/>
+<text x="675.45" y="523" text-anchor="middle" font-size="13">5.7</text>
+<line x1="754.09" y1="100" x2="754.09" y2="495" class="grid"/>
+<line x1="754.09" y1="495" x2="754.09" y2="501" class="axis"/>
+<text x="754.09" y="523" text-anchor="middle" font-size="13">5.9</text>
+<line x1="832.73" y1="100" x2="832.73" y2="495" class="grid"/>
+<line x1="832.73" y1="495" x2="832.73" y2="501" class="axis"/>
+<text x="832.73" y="523" text-anchor="middle" font-size="13">6.1</text>
+<line x1="911.36" y1="100" x2="911.36" y2="495" class="grid"/>
+<line x1="911.36" y1="495" x2="911.36" y2="501" class="axis"/>
+<text x="911.36" y="523" text-anchor="middle" font-size="13">6.3</text>
+<line x1="990.00" y1="100" x2="990.00" y2="495" class="grid"/>
+<line x1="990.00" y1="495" x2="990.00" y2="501" class="axis"/>
+<text x="990.00" y="523" text-anchor="middle" font-size="13">6.5</text>
+<line x1="125" y1="100" x2="990" y2="100" class="axis"/>
+<line x1="125" y1="495" x2="990" y2="495" class="axis"/>
+<line x1="125" y1="100" x2="125" y2="495" class="axis"/>
+<text x="30" y="297.5" text-anchor="middle" font-size="17" transform="rotate(-90 30 297.5)">Latency (ms)</text>
+<text x="107" y="241" text-anchor="end" font-size="17">CPU</text>
+<text x="107" y="396" text-anchor="end" font-size="17">GPU</text>
+<line x1="478.86" y1="213" x2="478.86" y2="257" stroke="#d97706" stroke-width="5"/>
+<circle cx="478.86" cy="235" r="8" fill="#fff7ed" stroke="#c2410c" stroke-width="3"/>
+<text x="491.86" y="218" font-size="14" font-weight="700">~5.20 ms*</text>
+<line x1="212.24" y1="390" x2="847.33" y2="390" stroke="#334155" stroke-width="2"/>
+<line x1="212.24" y1="372" x2="212.24" y2="408" stroke="#334155" stroke-width="2"/>
+<line x1="847.33" y1="372" x2="847.33" y2="408" stroke="#334155" stroke-width="2"/>
+<rect x="419.78" y="362" width="171.34" height="56" fill="#7895bd" fill-opacity=".9" stroke="#334155" stroke-width="1.5"/>
+<line x1="502.49" y1="362" x2="502.49" y2="418" stroke="#ed7d19" stroke-width="3"/>
+<circle cx="849.83" cy="390" r="4.5" fill="white" stroke="#111827" stroke-width="1.5"/>
+<circle cx="849.93" cy="390" r="4.5" fill="white" stroke="#111827" stroke-width="1.5"/>
+<circle cx="855.48" cy="390" r="4.5" fill="white" stroke="#111827" stroke-width="1.5"/>
+<circle cx="857.19" cy="390" r="4.5" fill="white" stroke="#111827" stroke-width="1.5"/>
+<circle cx="858.92" cy="390" r="4.5" fill="white" stroke="#111827" stroke-width="1.5"/>
+<circle cx="873.03" cy="390" r="4.5" fill="white" stroke="#111827" stroke-width="1.5"/>
+<circle cx="888.49" cy="390" r="4.5" fill="white" stroke="#111827" stroke-width="1.5"/>
+<circle cx="918.84" cy="390" r="4.5" fill="white" stroke="#111827" stroke-width="1.5"/>
+<text x="502.49" y="347" text-anchor="middle" font-size="14" font-weight="700">5.26 ms median</text>
+<text x="525.0" y="560" text-anchor="middle" font-size="15" font-weight="700">GPU median 5.260 ms vs. CPU image estimate ~5.20 ms (1.01×)</text>
+<text x="525.0" y="589" text-anchor="middle" font-size="12" fill="#536174">GPU IQR 5.050–5.485 ms · whiskers 4.522–6.137 ms · 8 outliers</text>
+<text x="525.0" y="619" text-anchor="middle" font-size="12" fill="#536174">*CPU median is visually estimated from the attached Cloud FHE boxplot; original CPU samples were not provided.</text>
+</svg>

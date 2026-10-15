@@ -1,0 +1,38 @@
+{
+    "batch_1": {
+        "batch_size": 1,
+        "median_kernel_ms": 9.642,
+        "per_op_kernel_ms": 9.642,
+        "median_h2d_ms": 0.006,
+        "median_d2h_ms": 0.008,
+        "total_latency_ms": 9.657,
+        "throughput_ops_sec": 103.56
+    },
+    "batch_8": {
+        "batch_size": 8,
+        "median_kernel_ms": 71.77,
+        "per_op_kernel_ms": 8.971,
+        "median_h2d_ms": 0.005,
+        "median_d2h_ms": 0.004,
+        "total_latency_ms": 71.779,
+        "throughput_ops_sec": 111.45
+    },
+    "batch_32": {
+        "batch_size": 32,
+        "median_kernel_ms": 284.051,
+        "per_op_kernel_ms": 8.877,
+        "median_h2d_ms": 0.003,
+        "median_d2h_ms": 0.004,
+        "total_latency_ms": 284.058,
+        "throughput_ops_sec": 112.65
+    },
+    "batch_64": {
+        "batch_size": 64,
+        "median_kernel_ms": 566.894,
+        "per_op_kernel_ms": 8.858,
+        "median_h2d_ms": 0.003,
+        "median_d2h_ms": 0.004,
+        "total_latency_ms": 566.901,
+        "throughput_ops_sec": 112.89
+    }
+}

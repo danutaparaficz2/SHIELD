@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="620" viewBox="0 0 1000 620">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text { font-family: Arial, sans-serif; fill: #172033; } .muted { fill: #5b6475; } .grid { stroke: #e5e9f0; stroke-width: 1; } .axis { stroke: #738096; stroke-width: 1.2; }</style>
+<text x="90" y="38" font-size="24" font-weight="700">GPU benchmark latency distribution</text>
+<text x="90" y="64" font-size="14" class="muted">1000 measured iterations · milliseconds</text>
+<line x1="90" y1="390.0" x2="950" y2="390.0" class="grid"/>
+<text x="78" y="395.0" font-size="12" text-anchor="end" class="muted">0</text>
+<line x1="90" y1="317.5" x2="950" y2="317.5" class="grid"/>
+<text x="78" y="322.5" font-size="12" text-anchor="end" class="muted">22</text>
+<line x1="90" y1="245.0" x2="950" y2="245.0" class="grid"/>
+<text x="78" y="250.0" font-size="12" text-anchor="end" class="muted">44</text>
+<line x1="90" y1="172.5" x2="950" y2="172.5" class="grid"/>
+<text x="78" y="177.5" font-size="12" text-anchor="end" class="muted">66</text>
+<line x1="90" y1="100.0" x2="950" y2="100.0" class="grid"/>
+<text x="78" y="105.0" font-size="12" text-anchor="end" class="muted">88</text>
+<rect x="91.0" y="390.0" width="24.9" height="0.0" fill="#4f83cc"/>
+<rect x="117.9" y="383.4" width="24.9" height="6.6" fill="#4f83cc"/>
+<rect x="144.8" y="357.0" width="24.9" height="33.0" fill="#4f83cc"/>
+<rect x="171.6" y="357.0" width="24.9" height="33.0" fill="#4f83cc"/>
+<rect x="198.5" y="268.1" width="24.9" height="121.9" fill="#4f83cc"/>
+<rect x="225.4" y="261.5" width="24.9" height="128.5" fill="#4f83cc"/>
+<rect x="252.2" y="202.2" width="24.9" height="187.8" fill="#4f83cc"/>
+<rect x="279.1" y="251.6" width="24.9" height="138.4" fill="#4f83cc"/>
+<rect x="306.0" y="317.5" width="24.9" height="72.5" fill="#4f83cc"/>
+<rect x="332.9" y="264.8" width="24.9" height="125.2" fill="#4f83cc"/>
+<rect x="359.8" y="221.9" width="24.9" height="168.1" fill="#4f83cc"/>
+<rect x="386.6" y="100.0" width="24.9" height="290.0" fill="#4f83cc"/>
+<rect x="413.5" y="126.4" width="24.9" height="263.6" fill="#4f83cc"/>
+<rect x="440.4" y="152.7" width="24.9" height="237.3" fill="#4f83cc"/>
+<rect x="467.2" y="179.1" width="24.9" height="210.9" fill="#4f83cc"/>
+<rect x="494.1" y="159.3" width="24.9" height="230.7" fill="#4f83cc"/>
+<rect x="521.0" y="182.4" width="24.9" height="207.6" fill="#4f83cc"/>
+<rect x="547.9" y="228.5" width="24.9" height="161.5" fill="#4f83cc"/>
+<rect x="574.8" y="268.1" width="24.9" height="121.9" fill="#4f83cc"/>
+<rect x="601.6" y="281.2" width="24.9" height="108.8" fill="#4f83cc"/>
+<rect x="628.5" y="287.8" width="24.9" height="102.2" fill="#4f83cc"/>
+<rect x="655.4" y="301.0" width="24.9" height="89.0" fill="#4f83cc"/>
+<rect x="682.2" y="334.0" width="24.9" height="56.0" fill="#4f83cc"/>
+<rect x="709.1" y="330.7" width="24.9" height="59.3" fill="#4f83cc"/>
+<rect x="736.0" y="343.9" width="24.9" height="46.1" fill="#4f83cc"/>
+<rect x="762.9" y="360.3" width="24.9" height="29.7" fill="#4f83cc"/>
+<rect x="789.8" y="366.9" width="24.9" height="23.1" fill="#4f83cc"/>
+<rect x="816.6" y="366.9" width="24.9" height="23.1" fill="#4f83cc"/>
+<rect x="843.5" y="376.8" width="24.9" height="13.2" fill="#4f83cc"/>
+<rect x="870.4" y="386.7" width="24.9" height="3.3" fill="#4f83cc"/>
+<rect x="897.2" y="386.7" width="24.9" height="3.3" fill="#4f83cc"/>
+<rect x="924.1" y="390.0" width="24.9" height="0.0" fill="#4f83cc"/>
+<line x1="90" y1="390" x2="950" y2="390" class="axis"/>
+<line x1="90" y1="100" x2="90" y2="390" class="axis"/>
+<text x="25" y="245.0" font-size="13" text-anchor="middle" class="muted" transform="rotate(-90 25 245.0)">Samples</text>
+<line x1="90.0" y1="390" x2="90.0" y2="395" class="axis"/>
+<text x="90.0" y="414" font-size="12" text-anchor="middle" class="muted">4.45</text>
+<line x1="262.0" y1="390" x2="262.0" y2="395" class="axis"/>
+<text x="262.0" y="414" font-size="12" text-anchor="middle" class="muted">4.84</text>
+<line x1="434.0" y1="390" x2="434.0" y2="395" class="axis"/>
+<text x="434.0" y="414" font-size="12" text-anchor="middle" class="muted">5.23</text>
+<line x1="606.0" y1="390" x2="606.0" y2="395" class="axis"/>
+<text x="606.0" y="414" font-size="12" text-anchor="middle" class="muted">5.61</text>
+<line x1="778.0" y1="390" x2="778.0" y2="395" class="axis"/>
+<text x="778.0" y="414" font-size="12" text-anchor="middle" class="muted">6.00</text>
+<line x1="950.0" y1="390" x2="950.0" y2="395" class="axis"/>
+<text x="950.0" y="414" font-size="12" text-anchor="middle" class="muted">6.39</text>
+<text x="90" y="438" font-size="14" font-weight="700">Latency summary</text>
+<line x1="121.9" y1="495" x2="838.4" y2="495" stroke="#46566f" stroke-width="2"/>
+<line x1="121.9" y1="484" x2="121.9" y2="506" stroke="#46566f" stroke-width="2"/>
+<line x1="838.4" y1="484" x2="838.4" y2="506" stroke="#46566f" stroke-width="2"/>
+<rect x="355.7" y="470" width="193.1" height="50" fill="#dbeafe" stroke="#3973b9" stroke-width="2"/>
+<line x1="448.9" y1="470" x2="448.9" y2="520" stroke="#c2413b" stroke-width="3"/>
+<text x="90" y="560" font-size="13" class="muted">Min 4.522 ms  ·  Q1 5.050 ms  ·  Median 5.260 ms  ·  Q3 5.485 ms  ·  Max 6.319 ms</text>
+<text x="90" y="584" font-size="12" class="muted">Red line: median · blue box: interquartile range · whiskers: Tukey range</text>
+</svg>
