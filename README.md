@@ -87,6 +87,83 @@ The scripts are independent experiments rather than one integrated executable
 pipeline. They use different libraries, schemes, and workloads; their timings
 are not directly interchangeable.
 
+## What the DGX Spark container contains
+
+The checked-in [`Dockerfile`](./Dockerfile) defines a **development container**,
+not a ready-to-run SHIELD application image:
+
+- **Base:** NVIDIA CUDA 12.8 development image on Ubuntu 22.04. CUDA development
+  tools come from the base image; NVIDIA GPU access at runtime still depends on
+  a correctly configured host driver and NVIDIA Container Toolkit.
+- **Build tools and system packages:** `build-essential`, CMake, Git, wget,
+  OpenMP development libraries, Python 3, pip, Python headers, and pybind11
+  headers.
+- **OpenFHE native library:** source tag `v1.5.1`, built in Release mode as
+  static libraries with OpenMP enabled; OpenFHE benchmarks and unit tests are
+  disabled for the container build.
+- **OpenFHE Python bindings:** cloned and compiled against the installed
+  OpenFHE library. The Dockerfile does not pin a binding commit/tag.
+- **GPU-backend source attempt:** it attempts to clone
+  `FreeMark/openfhe-gpu-backend` to `/workspace/openfhe-gpu-backend`. The
+  command is allowed to fail (`|| true`); the backend is not built, linked, or
+  activated by this Dockerfile.
+- **Startup behavior:** sets `/workspace` as the working directory and starts
+  an interactive Bash shell. It does not copy the project scripts or install
+  their Python dependencies into the image.
+
+In particular, the Dockerfile does not install PyTorch, Pyfhel, NumPy,
+scikit-learn, or Matplotlib via pip. Do not assume a script is runnable until
+its imports and CUDA requirements have been checked inside the built image.
+Also, mounting the host project over `/workspace` hides the backend clone
+stored there in the image; mount the project at another path (such as
+`/work/shield`) if you need to inspect that clone.
+
+### Container workflow for efficient experiments
+
+Build the image once, then reuse it for multiple experiments rather than
+rebuilding OpenFHE for every run:
+
+```bash
+docker build -t shield-spark .
+docker run --rm -it --gpus all \
+  -v "$PWD:/work/shield" -w /work/shield \
+  shield-spark
+```
+
+The `--gpus all` option requires GPU container support on the host. Inside the
+container, first verify device visibility (for example, `nvidia-smi` and a
+small PyTorch `torch.cuda.is_available()` check), then verify the OpenFHE
+Python import and each script's other dependencies. If an import is missing,
+install it in a controlled project environment or deliberately add and pin it
+in the image; the current Dockerfile does not supply a reproducible Python
+dependency set.
+
+For useful Spark measurements, keep the development and measurement stages
+distinct:
+
+1. **Validate the actual execution device.** A CUDA-enabled base image alone
+   does not move OpenFHE operations to the GPU. Confirm that the selected FHE
+   backend supports the operation and that profiling shows GPU kernels being
+   launched.
+2. **Measure equivalent workloads.** Compare the same scheme, parameters,
+   ciphertext sizes, and operations on CPU and GPU. Record encryption,
+   evaluation, decryption, and transfer costs separately; do not compare the
+   floating-point FFT proxy with real FHE results.
+3. **Use batches where appropriate.** GPU parallelism is most useful when
+   there is enough independent work to amortize launch and transfer overhead.
+   Retain single-item latency measurements as well as batch throughput.
+4. **Tune CPU parallelism without oversubscription.** OpenFHE is built with
+   OpenMP, while the scaling script also creates multiple processes. Set and
+   record OpenMP/thread counts alongside process counts so each worker does
+   not independently attempt to use every core.
+5. **Make results reproducible.** Pin the OpenFHE binding/backend revisions
+   and Python dependencies; save raw timing samples, exact commands, device
+   identity, and cryptographic parameters with each chart.
+
+These steps let the container's CUDA toolchain and OpenMP-enabled OpenFHE
+support a faster experimental loop, while keeping GPU acceleration claims tied
+to verified FHE execution rather than image contents alone.
+
 ## Visualizations
 
 ### End-to-end latency comparison
