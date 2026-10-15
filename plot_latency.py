@@ -65,6 +65,8 @@ def main():
     axs[1].grid(True, linestyle='--', alpha=0.6)
     axs[1].legend(fontsize=9)
 
+    s
+
     # ---------------------------------------------------------
     # Panel 3: Latency Breakdown (Stacked Bars)
     # ---------------------------------------------------------
