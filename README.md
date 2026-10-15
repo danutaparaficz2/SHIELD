@@ -85,10 +85,9 @@ are not directly comparable.
 ## 4. Results
 
 Only two figures are shown here. The latency charts and the Blackwell FFT proxy
-are exploratory and live in [visualizations/README.md](./visualizations/README.md);
-the 195× edge/cloud ratio is not reproducible and should not be cited.
+are exploratory and live in [visualizations/README.md](./visualizations/README.md).
 
-**Hybrid architecture** (design, not a measurement):
+**Hybrid architecture** (design):
 
 ![SHIELD hybrid architecture](./visualizations/shield_architecture.svg)
 
@@ -160,10 +159,6 @@ production key management/security, or real FHE acceleration on Blackwell.
 The container's CUDA base and attempted backend clone do not prove GPU FHE
 execution.
 
-**Next milestone:** correct the NSL-KDD preprocessing/split, then benchmark the
-same real FHE operation on CPU and a verified GPU backend, validate outputs
-against a reference, and publish raw measurements with reproducible setup.
-
 ## 7. Repository contents and commands
 
 | File | Purpose |
@@ -178,18 +173,7 @@ against a reference, and publish raw measurements with reproducible setup.
 | [`Dockerfile`](./Dockerfile) | CUDA/OpenFHE development container recipe. |
 | [`visualizations/`](./visualizations) | Saved charts and JSON snapshots. |
 
-The repository has no Python dependency lockfile or unified setup command.
-Subject to installing the required packages and native libraries, run
-individual experiments with:
 
-```bash
-python3 shield_hybrid_demo.py
-python3 shield_real_data_benchmark.py
-python3 test_openfhe_client.py
-python3 spark_scale_benchmark.py
-python3 fhe_blackwell_unified_benchmark.py
-python3 bench_latency_gpu.py
-```
 
 The NSL-KDD script downloads its dataset on first run. Benchmark outputs may
 overwrite saved snapshots. `plot_latency.py` expects a compatible
