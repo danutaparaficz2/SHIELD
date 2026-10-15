@@ -174,8 +174,3 @@ execution.
 | [`visualizations/`](./visualizations) | Saved charts and JSON snapshots. |
 
 
-
-The NSL-KDD script downloads its dataset on first run. Benchmark outputs may
-overwrite saved snapshots. `plot_latency.py` expects a compatible
-`latency_gpu_results.json` in its working directory; the checked-in plot and
-JSON snapshots are not all verified to come from the same run.
