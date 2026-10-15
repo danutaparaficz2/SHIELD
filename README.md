@@ -84,35 +84,51 @@ are not directly comparable.
 
 ## 4. Results
 
-The images below are the checked-in visualization assets. The evidence-status
-column summarizes how to interpret them; caveats are stated once here rather
-than repeated under each figure.
+Only two figures are shown here. The latency charts and the Blackwell FFT proxy
+are exploratory and live in [visualizations/README.md](./visualizations/README.md);
+the 195× edge/cloud ratio is not reproducible and should not be cited.
 
-| Experiment / image | What it shows | Evidence status |
-| --- | --- | --- |
-| ![Edge/cloud latency](./visualizations/latency_comparison.svg) | Local plaintext vs. cloud CKKS latency; cloud samples are described as 1,000 measured iterations. | Edge values are visual estimates; displayed ratio is illustrative, not reproducible. |
-| ![GPU latency distribution](./visualizations/latency_gpu_plot.svg) | Saved latency distribution; median 5.260 ms, IQR 5.050–5.485 ms. | Snapshot only; raw samples and exact run provenance are not checked in. |
-| ![CPU/GPU latency comparison](./visualizations/cpu_gpu_latency_comparison.svg) | GPU median vs. CPU value estimated at about 5.20 ms. | Not a validated FHE CPU/GPU comparison. |
-| ![Batched operation summary](./visualizations/fhe_benchmark_summary.png) | Per-operation latency, throughput, and reported transfer/kernel timing for batches 1–64. | Saved JSON snapshots differ; transfer timing is placeholder and GPU FHE execution is unestablished. |
-| ![Spark CPU scaling](./visualizations/shield_spark_scaling.png) | Latency and throughput for 200 flows over 1–16 process workers. | Exploratory, system-specific; raw result samples are not included. |
-| ![Blackwell FFT proxy](./visualizations/shield_blackwell_acceleration.png) | CPU/GPU float32 FFT convolution timings and speedups over batch sizes. | Floating-point CUDA proxy, not an FHE benchmark. |
+**Hybrid architecture** (design, not a measurement):
+
+![SHIELD hybrid architecture](./visualizations/shield_architecture.svg)
+
+**DGX Spark CPU scaling** (exploratory, system-specific):
+
+![Spark CPU scaling](./visualizations/shield_spark_scaling.png)
+
+Pyfhel CKKS (n=8192) over 200 flows with 1–16 process workers. This is a CPU
+benchmark; raw result samples are not checked in, so treat the numbers as
+indicative only.
 
 ## 5. DGX Spark and Docker setup
 
+### What the image builds
+
 [`Dockerfile`](./Dockerfile) is a development-container recipe, not a
-ready-to-run SHIELD image. It uses NVIDIA CUDA 12.8 on Ubuntu 22.04 and installs
-build tools, Python 3, pybind11, and OpenMP development files. It builds
-OpenFHE 1.5.1 in Release mode with static libraries and OpenMP, then builds the
-OpenFHE Python bindings. The binding revision is not pinned.
+ready-to-run SHIELD image. It uses NVIDIA CUDA 12.8 on Ubuntu 22.04, installs
+build tools, Python 3, pybind11 and OpenMP development files, then builds
+OpenFHE 1.5.1 (Release, static libraries, OpenMP) and its Python bindings
+(revision not pinned). It does not install the project's Python packages
+(PyTorch, Pyfhel, NumPy, pandas, scikit-learn, Matplotlib) or copy the scripts;
+it starts Bash in `/workspace`.
 
-The Dockerfile attempts to clone `FreeMark/openfhe-gpu-backend`, but permits
-that clone to fail and does not build, link, or enable the backend. It also
-does not install project Python packages (including PyTorch, Pyfhel, NumPy,
-pandas, scikit-learn, or Matplotlib) or copy the project scripts into the
-image. The image starts a Bash shell in `/workspace`. Mounting a host folder
-over `/workspace` hides the backend clone stored there.
+### What has been verified
 
-Build once and reuse the image:
+| Status | Item | Basis |
+| --- | --- | --- |
+| Verified on Spark (from saved outputs) | CUDA PyTorch ran on an NVIDIA GB10 device | [Blackwell FFT proxy chart](./visualizations/shield_blackwell_acceleration.png) title |
+| Verified on Spark (from saved outputs) | OpenFHE Python bindings ran CPU-side batched `EvalMult` timings | JSON snapshots in [`visualizations/`](./visualizations) |
+| Verified on Spark (from saved outputs) | Pyfhel CKKS multi-process scaling | [Spark scaling chart](./visualizations/shield_spark_scaling.png) |
+| Not recorded | Clean `docker build` log, host driver/toolkit versions, exact package versions | No log or lockfile in the repository |
+| Not established | GPU backend built, linked, or used by OpenFHE | The Dockerfile only attempts a clone that is allowed to fail and never builds it; no profiling shows OpenFHE CUDA kernels |
+
+The "verified" rows are inferred from checked-in outputs, not from a recorded
+build/test session. Add the build log and the versions used when re-running.
+
+### Build and run
+
+Mounting a host folder over `/workspace` hides the backend clone stored there,
+so the example mounts the project elsewhere. Build once and reuse the image:
 
 ```bash
 docker build -t shield-spark .
@@ -122,10 +138,9 @@ docker run --rm -it --gpus all \
 ```
 
 GPU access requires a working host driver and NVIDIA Container Toolkit. Inside
-the container, check device visibility (for example, `nvidia-smi` and
-`torch.cuda.is_available()` if PyTorch is installed) and verify each script's
-imports before running. Install dependencies in a controlled environment and
-pin them for repeatable runs.
+the container, check device visibility (`nvidia-smi`, and
+`torch.cuda.is_available()` if PyTorch is installed) and each script's imports
+before running. Install and pin dependencies for repeatable runs.
 
 For meaningful hardware comparisons, use the same FHE scheme, parameters,
 ciphertext sizes, and operations on CPU and GPU; confirm GPU kernels are
