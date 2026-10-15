@@ -3,8 +3,9 @@
 SHIELD is a feasibility prototype for a hybrid edge/cloud intrusion-detection
 workflow. Its goal is to keep routine decisions local and send only ambiguous
 network-flow features to a remote evaluator as encrypted data. The project
-combines a synthetic classification demo, CKKS/OpenFHE experiments, and
-exploratory CPU/GPU and multi-process benchmarks aimed at NVIDIA DGX Spark.
+combines synthetic and NSL-KDD-based classification experiments,
+CKKS/OpenFHE examples, and exploratory CPU/GPU and multi-process benchmarks
+aimed at NVIDIA DGX Spark.
 
 > **Status:** research prototype, not a production intrusion-detection system.
 > The repository contains useful end-to-end and hardware-exploration pieces,
@@ -30,6 +31,13 @@ uses a confidence threshold of 0.75 to choose between local inference and a
 CKKS encrypted dot-product path. It reports accuracy, F1, routing counts,
 latencies, and CKKS numerical differences. This is a feasibility simulation
 using generated data, not an evaluation on real network traffic.
+
+The newer [`shield_real_data_benchmark.py`](./shield_real_data_benchmark.py)
+adds a second experiment using selected numeric features from NSL-KDD. It
+trains a lightweight linear edge classifier and a higher-capacity logistic
+classifier over degree-2 polynomial features for ambiguous cases. Details and
+important experimental limitations are described in
+[NSL-KDD real-data benchmark](#nsl-kdd-real-data-benchmark).
 
 ## How NVIDIA DGX Spark architecture helps this project
 
@@ -75,6 +83,7 @@ speedups.
 | File | Purpose |
 | --- | --- |
 | [`shield_hybrid_demo.py`](./shield_hybrid_demo.py) | Synthetic-data edge/cloud routing demo using scikit-learn and Pyfhel CKKS. |
+| [`shield_real_data_benchmark.py`](./shield_real_data_benchmark.py) | NSL-KDD-based asymmetric edge/cloud classification and CKKS feasibility benchmark. |
 | [`test_openfhe_client.py`](./test_openfhe_client.py) | Small OpenFHE CKKS encrypt, multiply, decrypt, and verification smoke test. |
 | [`spark_scale_benchmark.py`](./spark_scale_benchmark.py) | Pyfhel CKKS workload split over process-worker counts; generates the Spark scaling chart. |
 | [`fhe_blackwell_unified_benchmark.py`](./fhe_blackwell_unified_benchmark.py) | PyTorch CPU/GPU floating-point FFT proxy benchmark; generates the Blackwell acceleration chart. |
@@ -86,6 +95,50 @@ speedups.
 The scripts are independent experiments rather than one integrated executable
 pipeline. They use different libraries, schemes, and workloads; their timings
 are not directly interchangeable.
+
+## NSL-KDD real-data benchmark
+
+[`shield_real_data_benchmark.py`](./shield_real_data_benchmark.py) expands the
+classification experiment beyond generated data:
+
+1. Downloads the NSL-KDD `KDDTrain+.csv` file from the URL in the script and
+   caches it as `/workspace/nsl_kdd_train.csv`. If the cache exists, it reuses
+   that file; the script does not verify its integrity or version.
+2. Maps the `normal` label to 0 and every other label to the attack class 1.
+   It uses 10 selected numeric traffic features and leaves the categorical
+   columns out of the model.
+3. Standardizes the features, then selects a seeded random sample of 2,500
+   training rows and 500 evaluation rows.
+4. Trains an edge logistic-regression classifier on the 10 scaled features.
+   For the cloud tier it expands the inputs to 65 degree-2 polynomial features
+   (including pairwise interactions) and trains a second logistic-regression
+   classifier.
+5. Routes predictions with confidence at least `0.80` to the edge model.
+   Ambiguous rows are expanded to polynomial features and evaluated using a
+   Pyfhel CKKS encrypted dot product with the cloud model's learned weights.
+   The script prints overall accuracy and F1, per-tier accuracy, and routing
+   counts.
+
+**Interpret the result as a dataset-based feasibility experiment, not a
+production or deployment benchmark.** Model training and feature transforms
+are plaintext. Encryption, homomorphic evaluation, and decryption all occur
+inside the same Python process; no edge/cloud transport or separate trust
+boundary is implemented. The script does not time inference or generate a
+visualization.
+
+There are also evaluation caveats to address before treating its metrics as
+unbiased model results:
+
+- The scaler is fit to the full dataset before rows are split, so evaluation
+  rows influence preprocessing. Fit the scaler on training rows only, then
+  transform the held-out rows.
+- The 2,500/500 sample is drawn from the downloaded training file rather than
+  using the separate official NSL-KDD test set; the split is not stratified.
+- There is no dataset checksum or pinned source revision, and the script
+  assumes it can write to `/workspace`.
+- This is a binary normal-versus-attack classification on selected features;
+  it does not evaluate attack categories, streaming traffic, or real network
+  capture data.
 
 ## What the DGX Spark container contains
 
@@ -111,7 +164,7 @@ not a ready-to-run SHIELD application image:
   an interactive Bash shell. It does not copy the project scripts or install
   their Python dependencies into the image.
 
-In particular, the Dockerfile does not install PyTorch, Pyfhel, NumPy,
+In particular, the Dockerfile does not install PyTorch, Pyfhel, NumPy, pandas,
 scikit-learn, or Matplotlib via pip. Do not assume a script is runnable until
 its imports and CUDA requirements have been checked inside the built image.
 Also, mounting the host project over `/workspace` hides the backend clone
@@ -259,9 +312,10 @@ experiment and has the same limitations.
   1.5.1 plus its Python bindings. It also attempts to clone an FHE GPU-backend
   repository, but this alone does not build, configure, or route OpenFHE
   operations through that backend.
-- The demo generates synthetic classification data at runtime. No real
-  network-flow dataset, deployment API, authentication, key-management
-  service, or production monitoring is included.
+- The synthetic demo generates classification data at runtime; the separate
+  NSL-KDD benchmark downloads a public dataset. Neither processes live network
+  captures or includes a deployment API, authentication, key-management
+  service, or production monitoring.
 
 ## Running the experiments
 
@@ -275,6 +329,7 @@ Examples:
 
 ```bash
 python3 shield_hybrid_demo.py
+python3 shield_real_data_benchmark.py
 python3 test_openfhe_client.py
 python3 spark_scale_benchmark.py
 python3 fhe_blackwell_unified_benchmark.py
@@ -282,7 +337,9 @@ python3 bench_latency_gpu.py
 ```
 
 The benchmark scripts generate some images and JSON files in their configured
-output locations. They may overwrite saved snapshots. To regenerate
+output locations. They may overwrite saved snapshots. The NSL-KDD benchmark
+downloads its dataset on first run and prints classification metrics but does
+not save results or create a chart. To regenerate
 `fhe_benchmark_summary.png`, the plotting script expects a compatible
 `latency_gpu_results.json` in its current working directory; its source should
 be checked before relying on it, as the saved plot and JSON files have not all
@@ -290,14 +347,16 @@ been shown to come from the same run.
 
 ## What the results do and do not show
 
-**Demonstrated in code:** a synthetic edge/cloud routing prototype, CKKS
-encrypt/evaluate/decrypt examples, a CPU process-scaling experiment, and
-exploratory PyTorch CUDA and OpenFHE timing scripts.
+**Demonstrated in code:** synthetic and NSL-KDD-based classification
+experiments, CKKS encrypt/evaluate/decrypt examples, a CPU process-scaling
+experiment, and exploratory PyTorch CUDA and OpenFHE timing scripts.
 
-**Not established by the checked-in experiments:** detection quality on
-real-world traffic, end-to-end network/serialization costs, production
-security, a validated speedup for real FHE operations on Blackwell, true
-zero-copy transfers, or comparable and reproducible CPU/GPU measurements.
+**Not established by the checked-in experiments:** generalizable detection
+quality on live or independent real-world traffic (the NSL-KDD script samples
+from the training file and fits preprocessing before splitting), end-to-end
+network/serialization costs, production security, a validated speedup for real
+FHE operations on Blackwell, true zero-copy transfers, or comparable and
+reproducible CPU/GPU measurements.
 
 The most important next benchmark step is to run the *same real FHE operation*
 with explicit CPU and GPU implementations, verify the result against a
